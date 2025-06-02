@@ -22,7 +22,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut buf = [0u8; 1500];
     loop {
         let (len, addr) = socket.recv_from(&mut buf).await?;
-        println!("Received {} bytes from {}", len, addr);
 
         if len < 126 {
             // SACN packet minimum size ~126 bytes
@@ -49,6 +48,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         // DMX start code is at offset 125, DMX data starts at 126
         let dmx_data = &buf[126..len.min(126 + (dmp_length as usize) - 1)];
+
+        // if a8 to ef are full of 0x64 then drop the packet
+        if buf[168..200].iter().all(|&x| x == 100) {
+            continue;
+        }
+        println!("Received {} bytes from {}", len, addr);
 
         println!("Universe: {}", universe);
         println!("DMX data length: {}", dmx_data.len());
