@@ -4,7 +4,7 @@ use tokio::net::UdpSocket;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // SACN multicast address for universe 1
-    let multicast_addr = "239.255.0.1:5568".parse::<SocketAddr>()?;
+    let multicast_addr = "239.255.0.6:5568".parse::<SocketAddr>()?;
 
     // Bind socket to listen on all interfaces on port 5568
     let local_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 5568);
